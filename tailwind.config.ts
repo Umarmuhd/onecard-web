@@ -47,6 +47,14 @@ module.exports = {
       zIndex: {
         60: "60",
       },
+      colors: {
+        brand: {
+          DEFAULT: "#E66652",
+        },
+        secondary: {
+          DEFAULT: "#33475B",
+        },
+      },
     },
   },
   plugins: [

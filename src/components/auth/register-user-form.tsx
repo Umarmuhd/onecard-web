@@ -1,10 +1,10 @@
 "use client";
+import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import React from "react";
 import {
   Card,
   CardContent,
@@ -14,7 +14,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Routes } from "@/config/routes";
@@ -28,11 +27,14 @@ import {
 } from "@/components/ui/form";
 
 const formSchema = z.object({
-  email: z.string().min(2).max(50),
+  first_name: z.string().min(2).max(50),
+  last_name: z.string().min(2).max(50),
+  phone_no: z.string().min(2).max(50),
+  email: z.string().min(10).max(11).email(),
   password: z.string().min(2).max(50),
 });
 
-export function LoginForm() {
+function RegisterUserFor() {
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,11 +51,39 @@ export function LoginForm() {
     <Form {...form}>
       <Card>
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl">Login in</CardTitle>
-          <CardDescription>Welcome Back</CardDescription>
+          <CardTitle className="text-2xl">Create an account</CardTitle>
+          <CardDescription>{"Let's get started on OneCard"}</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="first_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="last_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
               name="email"
@@ -62,6 +92,19 @@ export function LoginForm() {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input placeholder="" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone_no"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Phone number</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" type="tel" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -81,32 +124,26 @@ export function LoginForm() {
               )}
             />
             <Button type="submit" className="w-full">
-              Login
+              Signup
             </Button>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col">
           <div className="flex flex-col items-center gap-1 justify-center w-full">
-            <p>
+            <p className="text-center text-sm">
+              {"Already have an account?"}{" "}
               <Link
-                href={Routes.auth.forgot_password}
-                className="text-sm text-brand font-semibold"
+                href={Routes.auth.login}
+                className="text-brand font-semibold"
               >
-                Forgot password?
+                Login
               </Link>
             </p>
-            {/* <p className="text-sm text-center">
-            {"Didn't receive confirmation email?"}{" "}
-            <Link
-              href={Routes.auth.resend_email}
-              className="text-brand font-semibold"
-            >
-              Resend
-            </Link>
-          </p> */}
           </div>
         </CardFooter>
       </Card>
     </Form>
   );
 }
+
+export default RegisterUserFor;
