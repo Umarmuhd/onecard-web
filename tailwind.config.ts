@@ -66,8 +66,10 @@ module.exports = {
     require("@tailwindcss/forms"),
     // add custom variant for expanding sidebar
     plugin(({ addVariant, e }) => {
+      //@ts-ignore
       addVariant("sidebar-expanded", ({ modifySelectors, separator }) => {
         modifySelectors(
+          //@ts-ignore
           ({ className }) =>
             `.sidebar-expanded .${e(
               `sidebar-expanded${separator}${className}`
