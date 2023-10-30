@@ -49,13 +49,14 @@ module.exports = {
       },
       colors: {
         brand: {
-          DEFAULT: "#E66652",
+          DEFAULT: "#003AD6",
         },
         secondary: {
-          DEFAULT: "#33475B",
+          DEFAULT: "#121127",
         },
         light: {
           DEFAULT: "#FFFFFF",
+          a: "#EFF1F4",
         },
       },
     },
