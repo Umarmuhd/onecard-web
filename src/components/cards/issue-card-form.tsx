@@ -17,12 +17,16 @@ import {
 } from "@/components/ui/form";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useIssueCardMutation } from "@/data/card";
+import { toast } from "sonner";
+import { getErrorMessage } from "@/data/client/http-client";
+import { LoaderIcon } from "lucide-react";
 
 const formSchema = z.object({
   last_6: z.string().min(6).max(6),
   cvc: z.string().min(3).max(3),
   email: z.string().min(2).max(50),
-  otp: z.string().min(5).max(5),
+  otp: z.string().min(5).max(6),
   pin: z.string().min(4).max(4),
   confirm_pin: z.string().min(4).max(4),
 });
@@ -34,11 +38,30 @@ export function IssueCardForm() {
     defaultValues: {},
   });
 
+  const { mutate: issue, isPending } = useIssueCardMutation();
+
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    issue(
+      {
+        cvc: values.cvc,
+        email: values.email,
+        last6Digit: values.last_6,
+        otp: values.otp,
+        pin: values.pin,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Card issued successfully");
+        },
+        onError: (error) => {
+          toast.error(getErrorMessage(error));
+        },
+      }
+    );
   }
   return (
     <Form {...form}>
@@ -135,7 +158,13 @@ export function IssueCardForm() {
         </div>
       </form>
       <DialogFooter>
-        <Button type="submit" form="issue-card">
+        <Button type="submit" form="issue-card" disabled={isPending}>
+          {isPending && (
+            <LoaderIcon
+              className="mr-2 h-4 w-4 animate-spin"
+              aria-hidden="true"
+            />
+          )}
           Submit
         </Button>
       </DialogFooter>

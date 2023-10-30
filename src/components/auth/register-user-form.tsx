@@ -25,12 +25,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useRegisterMutation } from "@/data/auth";
+import { getErrorMessage } from "@/data/client/http-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { LoaderIcon } from "lucide-react";
 
 const formSchema = z.object({
   first_name: z.string().min(2).max(50),
   last_name: z.string().min(2).max(50),
   phone_no: z.string().min(2).max(50),
-  email: z.string().min(10).max(11).email(),
+  email: z.string().email(),
   password: z.string().min(2).max(50),
 });
 
@@ -41,11 +46,34 @@ function RegisterUserFor() {
     defaultValues: {},
   });
 
+  const router = useRouter();
+
+  const { mutate: register, isPending } = useRegisterMutation();
+
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+
+    const { first_name, last_name, phone_no } = values;
+    register(
+      {
+        ...values,
+        firstName: first_name,
+        lastName: last_name,
+        phoneNumber: phone_no,
+      },
+      {
+        onSuccess(data) {
+          toast.success("Account created successful!");
+          router.push(Routes.auth.login);
+        },
+        onError(error) {
+          toast.error(getErrorMessage(error));
+        },
+      }
+    );
   }
   return (
     <Form {...form}>
@@ -123,7 +151,13 @@ function RegisterUserFor() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending && (
+                <LoaderIcon
+                  className="mr-2 h-4 w-4 animate-spin"
+                  aria-hidden="true"
+                />
+              )}
               Signup
             </Button>
           </form>

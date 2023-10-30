@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import AuthProvider from "@/components/providers/auth-provider";
 import { ReactQueryClientProvider } from "@/components/providers";
+import { Toaster } from "sonner";
 
 const dmSans = DM_Sans({ subsets: ["latin"] });
 
@@ -28,7 +29,10 @@ export default function RootLayout({
           forcedTheme="light"
         >
           <AuthProvider>
-            <ReactQueryClientProvider>{children}</ReactQueryClientProvider>
+            <ReactQueryClientProvider>
+              <Toaster richColors={true} />
+              {children}
+            </ReactQueryClientProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

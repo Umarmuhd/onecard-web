@@ -26,6 +26,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { getErrorMessage } from "@/data/client/http-client";
+import { toast } from "sonner";
+import { LoaderIcon } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().min(2).max(50),
@@ -33,17 +38,37 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
+  const [isPending, startTransition] = React.useTransition();
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {},
   });
 
+  const router = useRouter();
+
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+
+    startTransition(async () => {
+      try {
+        const result = await signIn("credentials", {
+          email: values.email,
+          password: values.password,
+          redirect: false,
+        });
+        toast.success("Login successful!");
+        if (result?.ok) {
+          router.push(Routes.dashboard.home);
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error(getErrorMessage(error));
+      }
+    });
   }
   return (
     <Form {...form}>
@@ -80,7 +105,13 @@ export function LoginForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending && (
+                <LoaderIcon
+                  className="mr-2 h-4 w-4 animate-spin"
+                  aria-hidden="true"
+                />
+              )}
               Login
             </Button>
           </form>

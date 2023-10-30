@@ -24,8 +24,8 @@ import {
 import { IssueCardForm } from "@/components/cards/issue-card-form";
 
 export const metadata: Metadata = {
-  title: "Tasks",
-  description: "A task and issue tracker build using Tanstack Table.",
+  title: "Cards",
+  description: "Cards page",
 };
 
 // // Simulate a database read for tasks.

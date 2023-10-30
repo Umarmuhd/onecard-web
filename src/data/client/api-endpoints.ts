@@ -4,4 +4,8 @@ export const API_ENDPOINTS = {
     REGISTER: "/auth/register",
     LOGOUT: "/auth/logout",
   },
+  CARDS: {
+    BASE: "/cards",
+    ISSUE: "/cards/issue",
+  },
 };
