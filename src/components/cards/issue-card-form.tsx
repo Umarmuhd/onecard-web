@@ -19,8 +19,12 @@ import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({
+  last_6: z.string().min(6).max(6),
+  cvc: z.string().min(3).max(3),
   email: z.string().min(2).max(50),
-  password: z.string().min(2).max(50),
+  otp: z.string().min(5).max(5),
+  pin: z.string().min(4).max(4),
+  confirm_pin: z.string().min(4).max(4),
 });
 
 export function IssueCardForm() {
@@ -43,6 +47,38 @@ export function IssueCardForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="grid gap-4 py-4"
       >
+        <div className="grid grid-cols-3 gap-4">
+          <div className="col-span-2">
+            <FormField
+              control={form.control}
+              name="last_6"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last 6 Card Digit</FormLabel>
+                  <FormControl>
+                    <Input placeholder="" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="col-span-1">
+            <FormField
+              control={form.control}
+              name="cvc"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>CVC</FormLabel>
+                  <FormControl>
+                    <Input placeholder="CVC" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
         <FormField
           control={form.control}
           name="email"
@@ -58,21 +94,49 @@ export function IssueCardForm() {
         />
         <FormField
           control={form.control}
-          name="password"
+          name="otp"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>OTP</FormLabel>
               <FormControl>
-                <Input placeholder="" type="password" {...field} />
+                <Input placeholder="" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="pin"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>PIN</FormLabel>
+                <FormControl>
+                  <Input placeholder="" type="password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="confirm_pin"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm PIN</FormLabel>
+                <FormControl>
+                  <Input placeholder="" type="password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </form>
       <DialogFooter>
         <Button type="submit" form="issue-card">
-          Save changes
+          Submit
         </Button>
       </DialogFooter>
     </Form>
